@@ -290,7 +290,7 @@ tr:hover td { background: #f5f8fd; }
   <!-- FILTER BAR -->
   <div class="filter-bar">
     <span class="filter-lbl">வடிகட்டு:</span>
-    <select id="f-branch" onchange="applyFilter()">
+    <select id="f-branch" onchange="updateStaffDropdown(); applyFilter()">
       <option value="">எல்லா கிளைகளும்</option>
       <option>ஆணையாளர் பகுதி</option>
       <option>தாபனப்பகுதி</option>
@@ -314,7 +314,7 @@ tr:hover td { background: #f5f8fd; }
       <option>வேலைத்தளம்</option>
       <option>மின்சாரப்பகுதி</option>
     </select>
-    <select id="f-month" onchange="applyFilter()">
+    <select id="f-month" onchange="updateStaffDropdown(); applyFilter()">
       <option value="">எல்லா மாதங்களும்</option>
       <option value="1">ஜனவரி</option><option value="2">பிப்ரவரி</option>
       <option value="3">மார்ச்</option><option value="4">ஏப்ரல்</option>
@@ -323,7 +323,9 @@ tr:hover td { background: #f5f8fd; }
       <option value="9">செப்டம்பர்</option><option value="10">அக்டோபர்</option>
       <option value="11">நவம்பர்</option><option value="12">டிசம்பர்</option>
     </select>
-    <input id="f-search" type="text" placeholder="🔍 பெயர் தேடுங்கள்…" oninput="applyFilter()" style="min-width:180px">
+    <select id="f-staff" onchange="applyFilter()" style="min-width:180px">
+        <option value="">— எல்லா உத்தியோகத்தர்களும் —</option>
+    </select>
   </div>
 
   <!-- KPI CARDS -->
@@ -414,6 +416,35 @@ async function loadAll() {
     loadDemo();
   }
 }
+// Staff Dropdown 
+  function updateStaffDropdown() {
+  const branch  = document.getElementById('f-branch').value;
+  const month   = document.getElementById('f-month').value;
+  const staffEl = document.getElementById('f-staff');
+  const current = staffEl.value;
+
+  // தேர்ந்த கிளை + மாதத்தில் உள்ள staff பெயர்கள் மட்டும்
+  const names = [...new Set(
+    allData
+      .filter(r => {
+        const d = new Date(r.date);
+        const bMatch = !branch || r.branch === branch;
+        const mMatch = !month  || (d.getMonth()+1) === parseInt(month);
+        return bMatch && mMatch;
+      })
+      .map(r => r.name)
+      .sort()
+  )];
+
+  // Dropdown புதுப்பி
+  staffEl.innerHTML = '<option value="">— எல்லா உத்தியோகத்தர்களும் —</option>';
+  names.forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = n;
+    if (n === current) opt.selected = true;
+    staffEl.appendChild(opt);
+  });
+}
 
 // ══════════════════════════════════════════════
 //  FILTER
@@ -421,13 +452,13 @@ async function loadAll() {
 function applyFilter() {
   const branch = document.getElementById('f-branch').value;
   const month  = document.getElementById('f-month').value;
-  const search = document.getElementById('f-search').value.toLowerCase();
+  const search = document.getElementById('f-search').value;
 
   filtered = allData.filter(r => {
     const d = new Date(r.date);
     const mMatch = !month  || (d.getMonth()+1) === parseInt(month);
     const bMatch = !branch || r.branch === branch;
-    const sMatch = !search || r.name.toLowerCase().includes(search);
+    const sMatch = !search || r.name === search;
     return mMatch && bMatch && sMatch;
   });
 
@@ -438,6 +469,7 @@ function applyFilter() {
 //  RENDER ALL
 // ══════════════════════════════════════════════
 function renderAll() {
+  updateStaffDropdown();
   renderKPI();
   renderDaily();
   renderDonut();
