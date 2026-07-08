@@ -493,6 +493,8 @@ async function submitReport() {
   btn.disabled = true; btn.textContent = '⏳ சமர்ப்பிக்கிறது…';
 
   const payload = { name, nic, post, branch, date, tasks };
+  // பெயர், NIC, பதவி, கிளை சேமி
+  localStorage.setItem('jmc_staff', JSON.stringify({ name, nic, post, branch }));
 
   if (!SCRIPT_URL) {
     // Demo mode
@@ -622,6 +624,15 @@ function renderScore(name, branch, s, history, demo=false) {
 // ─── INIT ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('sdate').value = new Date().toISOString().split('T')[0];
+    // முன்பு சேமித்த விவரங்களை auto fill செய்
+const saved = localStorage.getItem('jmc_staff');
+if (saved) {
+  const s = JSON.parse(saved);
+  document.getElementById('sname').value   = s.name   || '';
+  document.getElementById('snic').value    = s.nic    || '';
+  document.getElementById('spost').value   = s.post   || '';
+  document.getElementById('sbranch').value = s.branch || '';
+}
   addTask();
 });
 </script>
