@@ -265,7 +265,7 @@ tr:hover td { background: var(--light); }
   <div class="hdr-top">
     <div class="hdr-icon">🏛️</div>
     <div>
-      <div class="hdr-title">யாழ்ப்பாண மாநகர சபை</div>
+      <div class="hdr-title">யாழ்ப்பாண நகர சபை</div>
       <div class="hdr-sub">நாளாந்த கடமை அறிக்கை அமைப்பு</div>
     </div>
   </div>
@@ -284,7 +284,7 @@ tr:hover td { background: var(--light); }
 
     <!-- Staff details -->
     <div class="card">
-      <div class="card-hd">👤 உத்தியோகத்தர் விபரம்</div>
+      <div class="card-hd">👤 உத்தியோகத்தர் விவரம்</div>
 
       <div class="row2">
         <div class="fg">
@@ -292,26 +292,26 @@ tr:hover td { background: var(--light); }
           <input id="sname" type="text" placeholder="உங்கள் பெயர்">
         </div>
         <div class="fg">
-          <label>தே.அ.அ.இல / NIC</label>
+          <label>ஆவண எண் / NIC</label>
           <input id="snic" type="text" placeholder="உதா: 199512300456">
         </div>
       </div>
 
-      <div class="row2">
+      <div class="row1">
         <div class="fg">
           <label>பதவி *</label>
           <select id="spost">
-            <option value="">— பதவியை தேர்வு செய்யவும் —</option>
+            <option value="">— பதவியை தேர்ந்தெடுக்க —</option>
             <option>அபிவிருத்தி உத்தியோகத்தர் சேவை</option>
             <option>முகாமைத்துவ சேவை உத்தியோகத்தர் சேவை</option>
-            <option>அலுவலகங்களில் கடமையாற்றும் ஏனைய பதவி உத்தியோகத்தர்கள்</option>
-           
-          </select>
+	    <option> அலுவலகங்களில் கடமையாற்றும் ஏனைய பதவி உத்தியோகத்தர்கள் </option>
+            </select>
         </div>
+	<div class="row1">
         <div class="fg">
           <label>கிளை *</label>
           <select id="sbranch">
-            <option value="">— கிளையை தேர்வு செய்யவும் —</option>
+            <option value="">— கிளையை தேர்ந்தெடுக்க —</option>
             <option>ஆணையாளர் பகுதி</option>
             <option>தாபனப்பகுதி</option>
             <option>கொள்வனவுப் பகுதி</option>
@@ -339,7 +339,7 @@ tr:hover td { background: var(--light); }
 
       <div class="row1">
         <div class="fg">
-          <label>அறிக்கை திகதி *</label>
+          <label>அறிக்கை தேதி *</label>
           <input id="sdate" type="date">
         </div>
       </div>
@@ -366,7 +366,7 @@ tr:hover td { background: var(--light); }
           <input id="lname" type="text" placeholder="உங்கள் பெயர் தட்டச்சு செய்யவும்">
         </div>
         <div class="fg">
-          <label>கிளை</label>
+          <label>கிளை (விருப்பத்தேர்வு)</label>
           <select id="lbranch">
             <option value="">— எல்லா கிளைகளும் —</option>
             <option>ஆணையாளர் பகுதி</option>
@@ -430,8 +430,8 @@ function addTask() {
     </div>
     <div class="row1">
       <div class="fg">
-        <label>பணி விபரம் *</label>
-        <textarea class="td" placeholder="இன்று செய்த வேலையை சுருக்கமாக விபரிக்கவும்…"></textarea>
+        <label>பணி விவரம் *</label>
+        <textarea class="td" placeholder="இன்று செய்த வேலையை சுருக்கமாக விவரிக்கவும்…"></textarea>
       </div>
     </div>
     <div class="row3">
@@ -468,7 +468,7 @@ async function submitReport() {
   const date   = document.getElementById('sdate').value;
 
   if (!name || !post || !branch || !date) {
-    msg.innerHTML = `<div class="alert err">⚠️ பெயர், பதவி, கிளை மற்றும் திகதி கட்டாயம் நிரப்பவும்.</div>`;
+    msg.innerHTML = `<div class="alert err">⚠️ பெயர், பதவி, கிளை மற்றும் தேதி கட்டாயம் நிரப்பவும்.</div>`;
     window.scrollTo(0,0); return;
   }
 
@@ -490,8 +490,6 @@ async function submitReport() {
   btn.disabled = true; btn.textContent = '⏳ சமர்ப்பிக்கிறது…';
 
   const payload = { name, nic, post, branch, date, tasks };
-  // பெயர், NIC, பதவி, கிளை சேமி
-  localStorage.setItem('jmc_staff', JSON.stringify({ name, nic, post, branch }));
 
   if (!SCRIPT_URL) {
     // Demo mode
@@ -621,15 +619,6 @@ function renderScore(name, branch, s, history, demo=false) {
 // ─── INIT ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('sdate').value = new Date().toISOString().split('T')[0];
-    // முன்பு சேமித்த விவரங்களை auto fill செய்
-const saved = localStorage.getItem('jmc_staff');
-if (saved) {
-  const s = JSON.parse(saved);
-  document.getElementById('sname').value   = s.name   || '';
-  document.getElementById('snic').value    = s.nic    || '';
-  document.getElementById('spost').value   = s.post   || '';
-  document.getElementById('sbranch').value = s.branch || '';
-}
   addTask();
 });
 </script>
