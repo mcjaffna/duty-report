@@ -265,7 +265,7 @@ tr:hover td { background: var(--light); }
   <div class="hdr-top">
     <div class="hdr-icon">🏛️</div>
     <div>
-      <div class="hdr-title">யாழ்ப்பாண மாநகர சபை</div>
+      <div class="hdr-title">யாழ்ப்பாணம் மாநகர சபை</div>
       <div class="hdr-sub">நாளாந்த கடமை அறிக்கை அமைப்பு</div>
     </div>
   </div>
@@ -284,7 +284,7 @@ tr:hover td { background: var(--light); }
 
     <!-- Staff details -->
     <div class="card">
-      <div class="card-hd">👤 உத்தியோகத்தர் விவரம்</div>
+      <div class="card-hd">👤 உத்தியோகத்தர் விபரம்</div>
 
       <div class="row2">
         <div class="fg">
@@ -292,7 +292,7 @@ tr:hover td { background: var(--light); }
           <input id="sname" type="text" placeholder="உங்கள் பெயர்">
         </div>
         <div class="fg">
-          <label>ஆவண எண் / NIC</label>
+          <label>தே.அ.அ.இல / NIC</label>
           <input id="snic" type="text" placeholder="உதா: 199512300456">
         </div>
       </div>
@@ -468,7 +468,7 @@ async function submitReport() {
   const date   = document.getElementById('sdate').value;
 
   if (!name || !post || !branch || !date) {
-    msg.innerHTML = `<div class="alert err">⚠️ பெயர், பதவி, கிளை மற்றும் தேதி கட்டாயம் நிரப்பவும்.</div>`;
+    msg.innerHTML = `<div class="alert err">⚠️ பெயர், பதவி, கிளை மற்றும் திகதி கட்டாயம் நிரப்பவும்.</div>`;
     window.scrollTo(0,0); return;
   }
 
@@ -487,7 +487,7 @@ async function submitReport() {
   }
 
   const btn = document.getElementById('sbtn');
-  btn.disabled = true; btn.textContent = '⏳ சமர்ப்பிக்கிறது…';
+  btn.disabled = true; btn.textContent = '⏳ சமர்ப்பிக்கின்றது…';
 
   const payload = { name, nic, post, branch, date, tasks };
 
@@ -568,7 +568,7 @@ function renderScore(name, branch, s, history, demo=false) {
   const rows = history.length
     ? history.map(h => {
         const bc  = h.status==='Completed' ? 'bc' : h.status==='In Progress' ? 'bi' : 'bp';
-        const lbl = h.status==='Completed' ? 'முடிந்தது' : h.status==='In Progress' ? 'நடைபெறுகிறது' : 'நிலுவையில்';
+        const lbl = h.status==='Completed' ? 'முடிந்தது' : h.status==='In Progress' ? 'நடைபெறுகின்றது' : 'நிலுவையில்';
         const time = h.startTime ? `${h.startTime}${h.endTime ? ' → '+h.endTime : ''}` : '—';
         return `<tr>
           <td style="white-space:nowrap">${h.date}</td>
@@ -606,10 +606,10 @@ function renderScore(name, branch, s, history, demo=false) {
     </div>
 
     <div class="card">
-      <div class="card-hd">📋 பணி வரலாறு</div>
+      <div class="card-hd">📋 பணிகள் </div>
       <div class="twrap">
         <table>
-          <thead><tr><th>தேதி</th><th>பணி விவரம்</th><th>நேரம்</th><th>நிலை</th></tr></thead>
+          <thead><tr><th>திகதி</th><th>பணி விபரம்</th><th>நேரம்</th><th>நிலை</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
@@ -618,7 +618,11 @@ function renderScore(name, branch, s, history, demo=false) {
 
 // ─── INIT ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('sdate').value = new Date().toISOString().split('T')[0];
+ const today = new Date().toISOString().split('T')[0];
+document.getElementById('sdate').value = today;
+document.getElementById('sdate').setAttribute('min', today);
+document.getElementById('sdate').setAttribute('max', today);
+document.getElementById('sdate').setAttribute('readonly', true);
   addTask();
 });
 </script>
