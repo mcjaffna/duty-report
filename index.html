@@ -487,24 +487,13 @@ async function submitReport() {
   }
 
   try {
-    const res    = await fetch(SCRIPT_URL, {
+    await fetch(SCRIPT_URL, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    const result = await res.json();
-    if (result.success) {
-      done(name, tasks);
-    } else {
-      msg.innerHTML = `<div class="alert err">❌ ${result.error}</div>`;
-    }
-  } catch {
-    msg.innerHTML = `<div class="alert err">❌ சமர்ப்பிக்க முடியவில்லை. இணைய இணைப்பை சரிபாருங்கள்.</div>`;
-  } finally {
-    // ✅ finally இப்போது try...catch-க்கு உள்ளே சரியாக உள்ளது
-    btn.disabled = false;
-    btn.textContent = '✅ அறிக்கையை சமர்ப்பிக்கவும்';
-  }
+    done(name, tasks);
 }
 
 function done(name, tasks) {
